@@ -23,6 +23,7 @@ provider "ibm" {
 module "ectd_db" {
   # Replace "master" with a GIT release version to lock into a specific release
   source            = "terraform-ibm-modules/icd-etcd/ibm"
+  version           = "3.4"
   resource_group_id = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
   name              = "my-etcd-instance"
   region            = "us-south"
