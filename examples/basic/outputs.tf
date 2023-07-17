@@ -1,18 +1,12 @@
 ##############################################################################
 # Outputs
 ##############################################################################
-
-output "cos_instance_id" {
-  description = "COS instance id"
-  value       = ibm_resource_instance.cos_instance.id
+output "id" {
+  description = "Etcd instance id"
+  value       = module.etcd_db.id
 }
 
-output "resource_group_name" {
-  description = "Resource group name"
-  value       = module.resource_group.resource_group_name
-}
-
-output "resource_group_id" {
-  description = "Resource group ID"
-  value       = module.resource_group.resource_group_id
+output "version" {
+  description = "Etcd instance version"
+  value       = module.etcd_db.version
 }

@@ -1,23 +1,22 @@
 ##############################################################################
 # Outputs
 ##############################################################################
-
-output "region" {
-  description = "The region all resources were provisioned in"
-  value       = var.region
+output "id" {
+  description = "Etcd instance id"
+  value       = module.etcd_db.id
 }
 
-output "prefix" {
-  description = "The prefix used to name all provisioned resources"
-  value       = var.prefix
+output "version" {
+  description = "Etcd instance version"
+  value       = module.etcd_db.version
 }
 
-output "resource_group_name" {
-  description = "The name of the resource group used"
-  value       = var.resource_group
+output "hostname" {
+  description = "Etcd instance hostname"
+  value       = module.etcd_db.hostname
 }
 
-output "resource_tags" {
-  description = "List of resource tags"
-  value       = var.resource_tags
+output "port" {
+  description = "Etcd instance port"
+  value       = module.etcd_db.port
 }

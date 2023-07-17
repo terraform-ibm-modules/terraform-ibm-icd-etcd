@@ -1,4 +1,8 @@
-# Complete example
+# Complete example with BYOK encryption, autoscaling, and service credential creation
 
-<!-- There is a pre-commit hook that will take the title of each example add include it in the repos main README.md  -->
-<!-- Add text below should describe exactly what resources are provisioned / configured by the example  -->
+An end-to-end example that provisions the following infrastructure:
+
+- A resource group, if one is not passed in.
+- A Key Protect instance with a root key.
+- An instance of Databases for etcd with BYOK encryption and autoscaling.
+- Service credentials for the database instance.
