@@ -120,6 +120,13 @@ resource "ibm_database" "etcd_db" {
   }
 }
 
+resource "ibm_resource_tag" "etcd_tag" {
+  count       = length(var.access_tags) == 0 ? 0 : 1
+  resource_id = ibm_database.etcd_db.resource_crn
+  tags        = var.access_tags
+  tag_type    = "access"
+}
+
 ##############################################################################
 # Context Based Restrictions
 ##############################################################################
