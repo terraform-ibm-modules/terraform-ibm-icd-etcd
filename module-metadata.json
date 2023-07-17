@@ -1,12 +1,541 @@
 {
   "path": ".",
-  "variables": {},
-  "outputs": {},
+  "variables": {
+    "admin_pass": {
+      "name": "admin_pass",
+      "type": "string",
+      "description": "The password for the database administrator. If the admin password is null then the admin user ID cannot be accessed. More users can be specified in a user block. The admin password must be in the range of 10-32 characters.",
+      "sensitive": true,
+      "source": [
+        "ibm_database.etcd_db.adminpassword"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 80
+      }
+    },
+    "auto_scaling": {
+      "name": "auto_scaling",
+      "type": "object({\n    disk = object({\n      capacity_enabled             = optional(bool, false)\n      free_space_less_than_percent = optional(number, 10)\n      io_above_percent             = optional(number, 90)\n      io_enabled                   = optional(bool, false)\n      io_over_period               = optional(string, \"15m\")\n      rate_increase_percent        = optional(number, 10)\n      rate_limit_mb_per_member     = optional(number, 3670016)\n      rate_period_seconds          = optional(number, 900)\n      rate_units                   = optional(string, \"mb\")\n    })\n    memory = object({\n      io_above_percent         = optional(number, 90)\n      io_enabled               = optional(bool, false)\n      io_over_period           = optional(string, \"15m\")\n      rate_increase_percent    = optional(number, 10)\n      rate_limit_mb_per_member = optional(number, 114688)\n      rate_period_seconds      = optional(number, 900)\n      rate_units               = optional(string, \"mb\")\n    })\n  })",
+      "description": "Optional rules to allow the database to increase resources in response to usage. Only a single autoscaling block is allowed. Make sure you understand the effects of autoscaling, especially for production environments. See https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-autoscaling in the IBM Cloud Docs.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 138
+      }
+    },
+    "backup_encryption_key_crn": {
+      "name": "backup_encryption_key_crn",
+      "type": "string",
+      "description": "The CRN of a Key Protect key, that you want to use for encrypting disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. If no value passed, the value passed for the 'kms_key_crn' variable will be used. BYOK for backups is available only in US regions us-south and us-east, and eu-de. Only keys in the us-south and eu-de are durable to region failures. To ensure that your backups are available even if a region failure occurs, you must use a key from us-south or eu-de. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported, so if no value is passed here, but a HPCS value is passed for var.kms_key_crn, databases backup encryption will use the default encryption keys.",
+      "pos": {
+        "filename": "variables.tf",
+        "line": 189
+      }
+    },
+    "cbr_rules": {
+      "name": "cbr_rules",
+      "type": "list(object({\n    description = string\n    account_id  = string\n    rule_contexts = list(object({\n      attributes = optional(list(object({\n        name  = string\n        value = string\n    }))) }))\n    enforcement_mode = string\n  }))",
+      "description": "(Optional, list) List of CBR rules to create",
+      "default": [],
+      "source": [
+        "module.cbr_rule",
+        "module.cbr_rule",
+        "module.cbr_rule",
+        "module.cbr_rule",
+        "module.cbr_rule"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 215
+      }
+    },
+    "configuration": {
+      "name": "configuration",
+      "type": "object({\n    max_connections            = optional(number)\n    max_prepared_transactions  = optional(number)\n    deadlock_timeout           = optional(number)\n    effective_io_concurrency   = optional(number)\n    max_replication_slots      = optional(number)\n    max_wal_senders            = optional(number)\n    shared_buffers             = optional(number)\n    synchronous_commit         = optional(string)\n    wal_level                  = optional(string)\n    archive_timeout            = optional(number)\n    log_min_duration_statement = optional(number)\n  })",
+      "description": "Database Configuration",
+      "source": [
+        "ibm_database.etcd_db.configuration"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 105
+      }
+    },
+    "etcd_version": {
+      "name": "etcd_version",
+      "type": "string",
+      "description": "Version of the etcd instance to provision. If no value passed, the current ICD preferred version is used.",
+      "source": [
+        "ibm_database.etcd_db.version"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 21
+      },
+      "immutable": true,
+      "computed": true
+    },
+    "existing_kms_instance_guid": {
+      "name": "existing_kms_instance_guid",
+      "type": "string",
+      "description": "The GUID of the Hyper Protect or Key Protect instance in which the key specified in var.kms_key_crn and var.backup_encryption_key_crn is coming from. Only required if var.kms_encryption_enabled is 'true', var.skip_iam_authorization_policy is 'false', and passing a value for var.kms_key_crn and/or var.backup_encryption_key_crn.",
+      "source": [
+        "ibm_iam_authorization_policy.policy.target_resource_instance_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 205
+      },
+      "immutable": true,
+      "computed": true
+    },
+    "kms_encryption_enabled": {
+      "name": "kms_encryption_enabled",
+      "type": "bool",
+      "description": "Set this to true to control the encryption keys used to encrypt the data that you store in IBM Cloud® Databases. If set to false, the data is encrypted by using randomly generated keys. For more info on Key Protect integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect. For more info on HPCS integration, see https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs",
+      "default": false,
+      "source": [
+        "ibm_iam_authorization_policy.policy.count"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 169
+      }
+    },
+    "kms_key_crn": {
+      "name": "kms_key_crn",
+      "type": "string",
+      "description": "The root key CRN of a Key Management Services like Key Protect or Hyper Protect Crypto Service (HPCS) that you want to use for disk encryption. Only used if var.kms_encryption_enabled is set to true.",
+      "source": [
+        "ibm_database.etcd_db.key_protect_key"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 175
+      },
+      "immutable": true
+    },
+    "member_cpu_count": {
+      "name": "member_cpu_count",
+      "type": "number",
+      "description": "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
+      "default": 0,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 55
+      }
+    },
+    "member_disk_mb": {
+      "name": "member_disk_mb",
+      "type": "number",
+      "description": "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
+      "default": 20480,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 48
+      }
+    },
+    "member_memory_mb": {
+      "name": "member_memory_mb",
+      "type": "number",
+      "description": "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
+      "default": 1024,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 41
+      }
+    },
+    "members": {
+      "name": "members",
+      "type": "number",
+      "description": "Allocated number of members. Members can be scaled up but not down.",
+      "default": 3,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 63
+      }
+    },
+    "name": {
+      "name": "name",
+      "type": "string",
+      "description": "The name to give the etcd instance.",
+      "required": true,
+      "source": [
+        "ibm_database.etcd_db.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 10
+      }
+    },
+    "plan_validation": {
+      "name": "plan_validation",
+      "type": "bool",
+      "description": "Enable or disable validating the database parameters for etcd during the plan phase.",
+      "default": true,
+      "source": [
+        "ibm_database.etcd_db.plan_validation"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 15
+      }
+    },
+    "region": {
+      "name": "region",
+      "type": "string",
+      "description": "The region where you want to deploy your instance.",
+      "default": "us-south",
+      "required": true,
+      "source": [
+        "ibm_database.etcd_db.location"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 35
+      },
+      "cloud_data_type": "region"
+    },
+    "resource_group_id": {
+      "name": "resource_group_id",
+      "type": "string",
+      "description": "The resource group ID where the etcd instance will be created.",
+      "required": true,
+      "source": [
+        "ibm_database.etcd_db.resource_group_id",
+        "ibm_iam_authorization_policy.policy.source_resource_group_id"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 5
+      },
+      "cloud_data_type": "resource_group",
+      "immutable": true,
+      "computed": true,
+      "cloud_data_range": [
+        "resolved_to:id"
+      ]
+    },
+    "service_credential_names": {
+      "name": "service_credential_names",
+      "type": "map(string)",
+      "description": "Map of name, role for service credentials that you want to create for the database",
+      "default": {},
+      "source": [
+        "ibm_resource_key.service_credentials.for_each"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 123
+      }
+    },
+    "service_endpoints": {
+      "name": "service_endpoints",
+      "type": "string",
+      "description": "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'.",
+      "default": "private",
+      "required": true,
+      "source": [
+        "data.ibm_database_connection.database_connection.endpoint_type",
+        "ibm_database.etcd_db.service_endpoints"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 70
+      },
+      "options": "public, private, public-and-private"
+    },
+    "skip_iam_authorization_policy": {
+      "name": "skip_iam_authorization_policy",
+      "type": "bool",
+      "description": "Set to true to skip the creation of an IAM authorization policy that permits all etcd database instances in the given resource group to read the encryption key from the Hyper Protect or Key Protect instance passed in var.existing_kms_instance_guid. If set to 'false', a value must be passed for var.existing_kms_instance_guid. No policy is created if var.kms_encryption_enabled is set to 'false'.",
+      "default": false,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 199
+      }
+    },
+    "tags": {
+      "name": "tags",
+      "type": "list(any)",
+      "description": "Optional list of tags to be added to the etcd instance.",
+      "default": [],
+      "source": [
+        "ibm_database.etcd_db.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 99
+      }
+    },
+    "users": {
+      "name": "users",
+      "type": "list(object({\n    name     = string\n    password = string # pragma: allowlist secret\n    type     = string # \"type\" is required to generate the connection string for the outputs.\n    role     = optional(string)\n  }))",
+      "description": "A list of users that you want to create on the database. Multiple blocks are allowed. The user password must be in the range of 10-32 characters. Be warned that in most case using IAM service credentials (via the var.service_credential_names) is sufficient to control access to the Etcd instance. This blocks creates native etcd database users, more info on that can be found here https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-user-management",
+      "default": [],
+      "sensitive": true,
+      "source": [
+        "data.ibm_database_connection.database_connection.count",
+        "data.ibm_database_connection.database_connection.user_id",
+        "data.ibm_database_connection.database_connection.user_type"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 87
+      }
+    }
+  },
+  "outputs": {
+    "cbr_rule_ids": {
+      "name": "cbr_rule_ids",
+      "description": "CBR rule ids created to restrict etcd",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 25
+      }
+    },
+    "crn": {
+      "name": "crn",
+      "description": "etcd instance crn",
+      "value": "ibm_database.etcd_db.resource_crn",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 20
+      },
+      "type": "TypeString"
+    },
+    "guid": {
+      "name": "guid",
+      "description": "etcd instance guid",
+      "value": "ibm_database.etcd_db.guid",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 10
+      },
+      "type": "TypeString"
+    },
+    "hostname": {
+      "name": "hostname",
+      "description": "Database hostname. Only contains value when var.service_credential_names or var.users are set.",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 42
+      }
+    },
+    "id": {
+      "name": "id",
+      "description": "etcd instance id",
+      "value": "ibm_database.etcd_db.id",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 5
+      }
+    },
+    "port": {
+      "name": "port",
+      "description": "Database port. Only contains value when var.service_credential_names or var.users are set.",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 47
+      }
+    },
+    "service_credentials_json": {
+      "name": "service_credentials_json",
+      "description": "Service credentials json map",
+      "value": "local.service_credentials_json",
+      "sensitive": true,
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 30
+      }
+    },
+    "service_credentials_object": {
+      "name": "service_credentials_object",
+      "description": "Service credentials object",
+      "value": "local.service_credentials_object",
+      "sensitive": true,
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 36
+      }
+    },
+    "version": {
+      "name": "version",
+      "description": "etcd instance version",
+      "value": "ibm_database.etcd_db.version",
+      "pos": {
+        "filename": "outputs.tf",
+        "line": 15
+      },
+      "type": "TypeString"
+    }
+  },
   "required_core": [
     "\u003e= 1.3.0"
   ],
-  "required_providers": {},
-  "managed_resources": {},
-  "data_resources": {},
-  "module_calls": {}
+  "required_providers": {
+    "ibm": {
+      "source": "IBM-Cloud/ibm",
+      "version_constraints": [
+        "\u003e= 1.54.0, \u003c 2.0.0"
+      ]
+    }
+  },
+  "managed_resources": {
+    "ibm_database.etcd_db": {
+      "mode": "managed",
+      "type": "ibm_database",
+      "name": "etcd_db",
+      "attributes": {
+        "adminpassword": "admin_pass",
+        "configuration": "configuration",
+        "key_protect_key": "kms_key_crn",
+        "location": "region",
+        "name": "name",
+        "plan_validation": "plan_validation",
+        "resource_group_id": "resource_group_id",
+        "service_endpoints": "service_endpoints",
+        "tags": "tags",
+        "version": "etcd_version"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 42
+      }
+    },
+    "ibm_iam_authorization_policy.policy": {
+      "mode": "managed",
+      "type": "ibm_iam_authorization_policy",
+      "name": "policy",
+      "attributes": {
+        "count": "kms_encryption_enabled",
+        "source_resource_group_id": "resource_group_id",
+        "target_resource_instance_id": "existing_kms_instance_guid"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 32
+      }
+    },
+    "ibm_resource_key.service_credentials": {
+      "mode": "managed",
+      "type": "ibm_resource_key",
+      "name": "service_credentials",
+      "attributes": {
+        "for_each": "service_credential_names"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 167
+      }
+    }
+  },
+  "data_resources": {
+    "data.ibm_database_connection.database_connection": {
+      "mode": "data",
+      "type": "ibm_database_connection",
+      "name": "database_connection",
+      "attributes": {
+        "count": "users",
+        "endpoint_type": "service_endpoints",
+        "user_id": "users",
+        "user_type": "users"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 195
+      }
+    }
+  },
+  "module_calls": {
+    "cbr_rule": {
+      "name": "cbr_rule",
+      "source": "terraform-ibm-modules/cbr/ibm//cbr-rule-module",
+      "version": "1.2.0",
+      "attributes": {
+        "count": "cbr_rules",
+        "enforcement_mode": "cbr_rules",
+        "resources": "cbr_rules",
+        "rule_contexts": "cbr_rules",
+        "rule_description": "cbr_rules"
+      },
+      "managed_resources": {
+        "ibm_cbr_rule.cbr_rule": {
+          "mode": "managed",
+          "type": "ibm_cbr_rule",
+          "name": "cbr_rule",
+          "attributes": {
+            "description": "rule_description",
+            "enforcement_mode": "enforcement_mode"
+          },
+          "provider": {
+            "name": "ibm"
+          },
+          "pos": {
+            "filename": ".terraform/modules/cbr_rule/cbr-rule-module/main.tf",
+            "line": 7
+          }
+        }
+      },
+      "data_resources": {},
+      "outputs": {
+        "rule_crn": {
+          "name": "rule_crn",
+          "description": "CBR rule resource instance crn",
+          "value": "ibm_cbr_rule.cbr_rule.crn",
+          "pos": {
+            "filename": ".terraform/modules/cbr_rule/cbr-rule-module/outputs.tf",
+            "line": 15
+          },
+          "type": "TypeString",
+          "cloud_data_type": "crn"
+        },
+        "rule_description": {
+          "name": "rule_description",
+          "description": "CBR rule resource instance description",
+          "value": "ibm_cbr_rule.cbr_rule.description",
+          "pos": {
+            "filename": ".terraform/modules/cbr_rule/cbr-rule-module/outputs.tf",
+            "line": 5
+          },
+          "type": "TypeString"
+        },
+        "rule_href": {
+          "name": "rule_href",
+          "description": "CBR rule resource href",
+          "value": "ibm_cbr_rule.cbr_rule.href",
+          "pos": {
+            "filename": ".terraform/modules/cbr_rule/cbr-rule-module/outputs.tf",
+            "line": 20
+          },
+          "type": "TypeString"
+        },
+        "rule_id": {
+          "name": "rule_id",
+          "description": "CBR rule resource instance id",
+          "value": "ibm_cbr_rule.cbr_rule.id",
+          "pos": {
+            "filename": ".terraform/modules/cbr_rule/cbr-rule-module/outputs.tf",
+            "line": 10
+          }
+        }
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 127
+      }
+    }
+  }
 }
