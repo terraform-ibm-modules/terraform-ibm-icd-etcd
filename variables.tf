@@ -7,7 +7,7 @@ variable "resource_group_id" {
   description = "The resource group ID where the etcd instance will be created."
 }
 
-variable "name" {
+variable "instance_name" {
   type        = string
   description = "The name to give the etcd instance."
 }
@@ -38,21 +38,21 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "member_memory_mb" {
+variable "memory_mb" {
   type        = number
   description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 1024
   # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
 }
 
-variable "member_disk_mb" {
+variable "disk_mb" {
   type        = number
   description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 20480
   # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
 }
 
-variable "member_cpu_count" {
+variable "cpu_count" {
   type        = number
   description = "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 0
@@ -67,13 +67,13 @@ variable "members" {
   # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
 }
 
-variable "service_endpoints" {
+variable "endpoints" {
   type        = string
   description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'."
   default     = "private"
   validation {
-    condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
-    error_message = "Valid values for service_endpoints are 'public', 'public-and-private', and 'private'"
+    condition     = contains(["public", "private", "public-and-private"], var.endpoints)
+    error_message = "Valid values for endpoints are 'public', 'public-and-private', and 'private'"
   }
 }
 

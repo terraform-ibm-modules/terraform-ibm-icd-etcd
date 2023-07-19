@@ -61,6 +61,42 @@
         "line": 105
       }
     },
+    "cpu_count": {
+      "name": "cpu_count",
+      "type": "number",
+      "description": "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
+      "default": 0,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 55
+      }
+    },
+    "disk_mb": {
+      "name": "disk_mb",
+      "type": "number",
+      "description": "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
+      "default": 20480,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 48
+      }
+    },
+    "endpoints": {
+      "name": "endpoints",
+      "type": "string",
+      "description": "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'.",
+      "default": "private",
+      "required": true,
+      "source": [
+        "data.ibm_database_connection.database_connection.endpoint_type",
+        "ibm_database.etcd_db.service_endpoints"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 70
+      },
+      "options": "public, private, public-and-private"
+    },
     "etcd_version": {
       "name": "etcd_version",
       "type": "string",
@@ -89,6 +125,19 @@
       "immutable": true,
       "computed": true
     },
+    "instance_name": {
+      "name": "instance_name",
+      "type": "string",
+      "description": "The name to give the etcd instance.",
+      "required": true,
+      "source": [
+        "ibm_database.etcd_db.name"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 10
+      }
+    },
     "kms_encryption_enabled": {
       "name": "kms_encryption_enabled",
       "type": "bool",
@@ -115,36 +164,6 @@
       },
       "immutable": true
     },
-    "member_cpu_count": {
-      "name": "member_cpu_count",
-      "type": "number",
-      "description": "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
-      "default": 0,
-      "pos": {
-        "filename": "variables.tf",
-        "line": 55
-      }
-    },
-    "member_disk_mb": {
-      "name": "member_disk_mb",
-      "type": "number",
-      "description": "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
-      "default": 20480,
-      "pos": {
-        "filename": "variables.tf",
-        "line": 48
-      }
-    },
-    "member_memory_mb": {
-      "name": "member_memory_mb",
-      "type": "number",
-      "description": "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
-      "default": 1024,
-      "pos": {
-        "filename": "variables.tf",
-        "line": 41
-      }
-    },
     "members": {
       "name": "members",
       "type": "number",
@@ -155,17 +174,14 @@
         "line": 63
       }
     },
-    "name": {
-      "name": "name",
-      "type": "string",
-      "description": "The name to give the etcd instance.",
-      "required": true,
-      "source": [
-        "ibm_database.etcd_db.name"
-      ],
+    "memory_mb": {
+      "name": "memory_mb",
+      "type": "number",
+      "description": "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling",
+      "default": 1024,
       "pos": {
         "filename": "variables.tf",
-        "line": 10
+        "line": 41
       }
     },
     "plan_validation": {
@@ -228,22 +244,6 @@
         "filename": "variables.tf",
         "line": 123
       }
-    },
-    "service_endpoints": {
-      "name": "service_endpoints",
-      "type": "string",
-      "description": "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'.",
-      "default": "private",
-      "required": true,
-      "source": [
-        "data.ibm_database_connection.database_connection.endpoint_type",
-        "ibm_database.etcd_db.service_endpoints"
-      ],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 70
-      },
-      "options": "public, private, public-and-private"
     },
     "skip_iam_authorization_policy": {
       "name": "skip_iam_authorization_policy",
@@ -391,10 +391,10 @@
         "configuration": "configuration",
         "key_protect_key": "kms_key_crn",
         "location": "region",
-        "name": "name",
+        "name": "instance_name",
         "plan_validation": "plan_validation",
         "resource_group_id": "resource_group_id",
-        "service_endpoints": "service_endpoints",
+        "service_endpoints": "endpoints",
         "tags": "tags",
         "version": "etcd_version"
       },
@@ -446,7 +446,7 @@
       "name": "database_connection",
       "attributes": {
         "count": "users",
-        "endpoint_type": "service_endpoints",
+        "endpoint_type": "endpoints",
         "user_id": "users",
         "user_type": "users"
       },
