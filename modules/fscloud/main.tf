@@ -5,7 +5,7 @@ module "etcd_db" {
   region                        = var.region
   skip_iam_authorization_policy = var.skip_iam_authorization_policy
   endpoints                     = "private"
-  etcd_version               = var.etcd_version
+  etcd_version                  = var.etcd_version
   kms_encryption_enabled        = true
   existing_kms_instance_guid    = var.existing_kms_instance_guid
   kms_key_crn                   = var.kms_key_crn

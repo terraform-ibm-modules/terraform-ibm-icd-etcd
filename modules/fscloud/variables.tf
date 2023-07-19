@@ -18,12 +18,6 @@ variable "etcd_version" {
   default     = null
 }
 
-variable "access_tags" {
-  type        = list(string)
-  description = "A list of access tags to apply to the etcd_db instance created by the module, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial for more details"
-  default     = []
-}
-
 variable "region" {
   description = "The region where you want to deploy your instance. Must be the same region as the Hyper Protect Crypto Services instance."
   type        = string
