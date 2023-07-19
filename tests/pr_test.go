@@ -17,6 +17,7 @@ import (
 const resourceGroup = "geretain-test-etcd"
 const completeExampleTerraformDir = "examples/complete"
 const basicExampleTerraformDir = "examples/basic"
+const fsCloudExampleTerraformDir = "examples/fscloud"
 
 // Restricting due to limited availability of BYOK in certain regions
 const regionSelectionPath = "../common-dev-assets/common-go-assets/icd-region-prefs.yaml"
@@ -41,7 +42,7 @@ func TestRunFSCloudExample(t *testing.T) {
 	t.Parallel()
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:      t,
-		TerraformDir: "examples/fscloud",
+		TerraformDir: fsCloudExampleTerraformDir,
 		Prefix:       "etcd-fscloud",
 		Region:       "us-south", // For FSCloud locking into us-south since that is where the HPCS permanent instance is
 		/*
@@ -52,7 +53,6 @@ func TestRunFSCloudExample(t *testing.T) {
 		*/
 		//ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			// "access_tags":                permanentResources["accessTags"],
 			"existing_kms_instance_guid": permanentResources["hpcs_south"],
 			"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
 			"etcd_version":               "3.4", // Always lock this test into the latest supported etcd version

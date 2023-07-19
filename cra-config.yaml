@@ -3,7 +3,7 @@ version: "v1"
 CRA_TARGETS:
   - CRA_TARGET: "examples/fscloud" # Target directory for CRA scan. If not provided, the CRA Scan will not be run.
     CRA_IGNORE_RULES_FILE: "cra-tf-validate-ignore-rules.json" # CRA Ignore file to use. If not provided, it checks the repo root directory for `cra-tf-validate-ignore-rules.json`
-    # CRA_ENVIRONMENT_VARIABLES:  # An optional map of environment variables for CRA, where the key is the variable name and value is the value. Useful for providing TF_VARs.
+    CRA_ENVIRONMENT_VARIABLES:  "TF_VAR_existing_kms_instance_guid=${{ vars.HPCS_SOUTH_GUID }},TF_VAR_kms_key_crn=${{ vars.HPCS_SOUTH_KEY_CRN }} "
     #   TF_VAR_sample: "sample value"
     #   TF_VAR_other:  "another value"
     # SCC_INSTANCE_ID: "" # The SCC instance ID to use to download profile for CRA scan. If not provided, a default global value will be used.
