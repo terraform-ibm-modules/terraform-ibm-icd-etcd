@@ -42,7 +42,7 @@ resource "ibm_iam_authorization_policy" "policy" {
 resource "ibm_database" "etcd_db" {
   depends_on        = [ibm_iam_authorization_policy.policy]
   resource_group_id = var.resource_group_id
-  name              = var.instance_name
+  name              = var.name
   service           = "databases-for-etcd"
   location          = var.region
   plan              = "standard" # Only standard plan is available for etcd
@@ -50,7 +50,7 @@ resource "ibm_database" "etcd_db" {
   version           = var.etcd_version
   tags              = var.tags
   adminpassword     = var.admin_pass
-  service_endpoints = var.endpoints
+  service_endpoints = var.service_endpoints
   configuration     = var.configuration != null ? jsonencode(var.configuration) : null
 
   key_protect_key           = var.kms_key_crn
@@ -69,13 +69,13 @@ resource "ibm_database" "etcd_db" {
   group {
     group_id = "member" #Only member type is allowed for etcd
     memory {
-      allocation_mb = var.memory_mb
+      allocation_mb = var.member_memory_mb
     }
     disk {
-      allocation_mb = var.disk_mb
+      allocation_mb = var.member_disk_mb
     }
     cpu {
-      allocation_count = var.cpu_count
+      allocation_count = var.member_cpu_count
     }
 
     members {
@@ -194,7 +194,7 @@ locals {
 
 data "ibm_database_connection" "database_connection" {
   count         = length(var.users) > 0 ? 1 : 0
-  endpoint_type = var.endpoints
+  endpoint_type = var.service_endpoints
   deployment_id = ibm_database.etcd_db.id
   user_id       = var.users[0].name
   user_type     = var.users[0].type

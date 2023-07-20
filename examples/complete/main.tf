@@ -31,7 +31,7 @@ module "key_protect_all_inclusive" {
 module "etcd_db" {
   source                     = "../../"
   resource_group_id          = module.resource_group.resource_group_id
-  instance_name              = "${var.prefix}-etcd"
+  name                       = "${var.prefix}-etcd"
   region                     = var.region
   etcd_version               = var.etcd_version
   kms_encryption_enabled     = true
@@ -40,6 +40,5 @@ module "etcd_db" {
   kms_key_crn                = module.key_protect_all_inclusive.keys["icd-etcd.${var.prefix}-etcd"].crn
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   tags                       = var.resource_tags
-  auto_scaling               = var.auto_scaling
   service_credential_names   = var.service_credential_names
 }

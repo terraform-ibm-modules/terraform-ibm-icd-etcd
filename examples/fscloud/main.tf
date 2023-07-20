@@ -56,7 +56,7 @@ module "cbr_zone" {
 module "etcd_db" {
   source                     = "../../modules/fscloud"
   resource_group_id          = module.resource_group.resource_group_id
-  instance_name              = "${var.prefix}-etcd"
+  name                       = "${var.prefix}-etcd"
   region                     = var.region
   etcd_version               = var.etcd_version
   tags                       = var.resource_tags

@@ -7,7 +7,7 @@ variable "resource_group_id" {
   description = "The resource group ID where the etcd_db instance will be created."
 }
 
-variable "instance_name" {
+variable "name" {
   description = "Name of the etcd_db instance"
   type        = string
 }
@@ -36,21 +36,21 @@ variable "configuration" {
   default = null
 }
 
-variable "memory_mb" {
+variable "member_memory_mb" {
   type        = number
   description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 1024
   # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
 }
 
-variable "disk_mb" {
+variable "member_disk_mb" {
   type        = number
   description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 20480
   # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
 }
 
-variable "cpu_count" {
+variable "member_cpu_count" {
   type        = number
   description = "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 0
