@@ -40,6 +40,5 @@ module "etcd_db" {
   kms_key_crn                = module.key_protect_all_inclusive.keys["icd-etcd.${var.prefix}-etcd"].crn
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   tags                       = var.resource_tags
-  auto_scaling               = var.auto_scaling
   service_credential_names   = var.service_credential_names
 }
