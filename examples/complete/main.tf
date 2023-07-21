@@ -41,6 +41,5 @@ module "etcd_db" {
   existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
   tags                       = var.resource_tags
   access_tags                = var.access_tags
-  auto_scaling               = var.auto_scaling
   service_credential_names   = var.service_credential_names
 }

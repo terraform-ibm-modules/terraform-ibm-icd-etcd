@@ -44,6 +44,7 @@ You need the following permissions to run this module.
 
 - [ Basic example](examples/basic)
 - [ Complete example with BYOK encryption, autoscaling, and service credential creation](examples/complete)
+- [ Financial Services Cloud profile example with autoscaling enabled](examples/fscloud)
 <!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
