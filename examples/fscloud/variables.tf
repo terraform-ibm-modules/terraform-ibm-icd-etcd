@@ -28,6 +28,12 @@ variable "resource_tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "A list of access tags to apply to the etcd db instance created by the module, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial for more details"
+  default     = []
+}
+
 variable "existing_kms_instance_guid" {
   description = "The GUID of the Hyper Protect Crypto service in which the key specified in var.kms_key_crn is coming from"
   type        = string

@@ -101,6 +101,12 @@ variable "tags" {
   default     = []
 }
 
+variable "access_tags" {
+  type        = list(string)
+  description = "A list of access tags to apply to the etcd db instance created by the module, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial for more details"
+  default     = []
+}
+
 variable "kms_key_crn" {
   type        = string
   description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption."

@@ -12,6 +12,7 @@ module "etcd_db" {
   backup_encryption_key_crn     = null # Need to use default encryption until ICD adds HPCS support for backup encryption
   cbr_rules                     = var.cbr_rules
   tags                          = var.tags
+  access_tags                   = var.access_tags
   configuration                 = var.configuration
   members                       = var.members
   member_memory_mb              = var.member_memory_mb
