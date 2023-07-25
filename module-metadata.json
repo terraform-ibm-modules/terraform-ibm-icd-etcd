@@ -1,6 +1,27 @@
 {
   "path": ".",
   "variables": {
+    "access_tags": {
+      "name": "access_tags",
+      "type": "list(string)",
+      "description": "A list of access tags to apply to the etcd db instance created by the module, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial for more details",
+      "default": [],
+      "source": [
+        "ibm_resource_tag.etcd_tag.count",
+        "ibm_resource_tag.etcd_tag.tags"
+      ],
+      "pos": {
+        "filename": "variables.tf",
+        "line": 105
+      },
+      "min_length": 1,
+      "max_length": 128,
+      "matches": "^[A-Za-z0-9:_ .-]+$",
+      "computed": true,
+      "elem": {
+        "type": "TypeString"
+      }
+    },
     "admin_pass": {
       "name": "admin_pass",
       "type": "string",
@@ -20,7 +41,7 @@
       "description": "Optional rules to allow the database to increase resources in response to usage. Only a single autoscaling block is allowed. Make sure you understand the effects of autoscaling, especially for production environments. See https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-autoscaling in the IBM Cloud Docs.",
       "pos": {
         "filename": "variables.tf",
-        "line": 138
+        "line": 151
       }
     },
     "backup_encryption_key_crn": {
@@ -29,7 +50,7 @@
       "description": "The CRN of a Key Protect key, that you want to use for encrypting disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. If no value passed, the value passed for the 'kms_key_crn' variable will be used. BYOK for backups is available only in US regions us-south and us-east, and eu-de. Only keys in the us-south and eu-de are durable to region failures. To ensure that your backups are available even if a region failure occurs, you must use a key from us-south or eu-de. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported, so if no value is passed here, but a HPCS value is passed for var.kms_key_crn, databases backup encryption will use the default encryption keys.",
       "pos": {
         "filename": "variables.tf",
-        "line": 189
+        "line": 202
       }
     },
     "cbr_rules": {
@@ -46,7 +67,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 215
+        "line": 228
       }
     },
     "configuration": {
@@ -58,7 +79,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 105
+        "line": 118
       }
     },
     "etcd_version": {
@@ -84,7 +105,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 205
+        "line": 218
       },
       "immutable": true,
       "computed": true
@@ -99,7 +120,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 169
+        "line": 182
       }
     },
     "kms_key_crn": {
@@ -111,7 +132,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 175
+        "line": 188
       },
       "immutable": true
     },
@@ -226,7 +247,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 123
+        "line": 136
       }
     },
     "service_endpoints": {
@@ -252,7 +273,7 @@
       "default": false,
       "pos": {
         "filename": "variables.tf",
-        "line": 199
+        "line": 212
       }
     },
     "tags": {
@@ -435,7 +456,23 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 167
+        "line": 174
+      }
+    },
+    "ibm_resource_tag.etcd_tag": {
+      "mode": "managed",
+      "type": "ibm_resource_tag",
+      "name": "etcd_tag",
+      "attributes": {
+        "count": "access_tags",
+        "tags": "access_tags"
+      },
+      "provider": {
+        "name": "ibm"
+      },
+      "pos": {
+        "filename": "main.tf",
+        "line": 123
       }
     }
   },
@@ -455,7 +492,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 195
+        "line": 202
       }
     }
   },
@@ -534,7 +571,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 127
+        "line": 134
       }
     }
   }
