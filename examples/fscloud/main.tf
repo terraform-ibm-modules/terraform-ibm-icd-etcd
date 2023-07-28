@@ -60,6 +60,7 @@ module "etcd_db" {
   region                     = var.region
   etcd_version               = var.etcd_version
   tags                       = var.resource_tags
+  access_tags                = var.access_tags
   kms_key_crn                = var.kms_key_crn
   existing_kms_instance_guid = var.existing_kms_instance_guid
   auto_scaling               = var.auto_scaling
