@@ -20,3 +20,13 @@ output "port" {
   description = "Etcd instance port"
   value       = module.etcd_db.port
 }
+
+output "hostname" {
+  description = "Database hostname. Only contains value when var.service_credential_names or var.users are set."
+  value       = module.etcd_db.hostname
+}
+
+output "port" {
+  description = "Database port. Only contains value when var.service_credential_names or var.users are set."
+  value       = module.etcd_db.port
+}
