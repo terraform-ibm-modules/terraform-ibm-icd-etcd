@@ -50,6 +50,17 @@ variable "etcd_version" {
   default     = null
 }
 
+variable "service_credential_names" {
+  description = "Map of name, role for service credentials that you want to create for the database"
+  type        = map(string)
+  default = {
+    "etcd_admin" : "Administrator",
+    "etcd_operator" : "Operator",
+    "etcd_viewer" : "Viewer",
+    "etcd_editor" : "Editor",
+  }
+}
+
 variable "auto_scaling" {
   type = object({
     disk = object({

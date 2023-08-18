@@ -63,6 +63,7 @@ module "etcd_db" {
   access_tags                = var.access_tags
   kms_key_crn                = var.kms_key_crn
   existing_kms_instance_guid = var.existing_kms_instance_guid
+  service_credential_names   = var.service_credential_names
   auto_scaling               = var.auto_scaling
   cbr_rules = [
     {

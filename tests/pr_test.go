@@ -60,9 +60,17 @@ func TestRunFSCloudExample(t *testing.T) {
 			"etcd_version":               "3.4", // Always lock this test into the latest supported etcd version
 		},
 	})
+	options.SkipTestTearDown = true
 	output, err := options.RunTestConsistency()
 	assert.Nil(t, err, "This should not have errored")
 	assert.NotNil(t, output, "Expected some output")
+
+	// check if outputs exist
+	outputs := terraform.OutputAll(options.Testing, options.TerraformOptions)
+	expectedOutputs := []string{"port", "hostname"}
+	_, outputErr := testhelper.ValidateTerraformOutputs(outputs, expectedOutputs...)
+	assert.NoErrorf(t, outputErr, "Some outputs not found or nil")
+	options.TestTearDown()
 }
 func TestRunCompleteUpgradeExample(t *testing.T) {
 	t.Parallel()
@@ -90,15 +98,8 @@ func TestRunCompleteUpgradeExample(t *testing.T) {
 			"admin_pass": randomPass,
 		},
 	})
-	options.SkipTestTearDown = true
+
 	output, err := options.RunTestUpgrade()
 	assert.Nil(t, err, "This should not have errored")
 	assert.NotNil(t, output, "Expected some output")
-
-	// check if outputs exist
-	outputs := terraform.OutputAll(options.Testing, options.TerraformOptions)
-	expectedOutputs := []string{"port", "hostname"}
-	_, outputErr := testhelper.ValidateTerraformOutputs(outputs, expectedOutputs...)
-	assert.NoErrorf(t, outputErr, "Some outputs not found or nil")
-	options.TestTearDown()
 }
