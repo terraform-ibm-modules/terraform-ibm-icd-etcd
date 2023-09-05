@@ -13,4 +13,4 @@ repository:
 
   description: "Implements an instance of IBM Cloud Databases for etcd."
 
-  topics: core-team, terraform, ibm-cloud, terraform-module, icd, etcd, icd-etcd
+  topics: core-team, terraform, ibm-cloud, terraform-module, icd, etcd, icd-etcd, supported, graduated
