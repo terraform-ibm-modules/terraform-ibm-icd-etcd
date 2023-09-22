@@ -51,7 +51,7 @@ resource "ibm_database" "etcd_db" {
   tags              = var.tags
   adminpassword     = var.admin_pass
   service_endpoints = var.service_endpoints
-  configuration     = var.configuration != null ? jsonencode(var.configuration) : null
+  configuration     = var.configuration != null ? jsonencode({ for k, v in var.configuration : k => v if v != null }) : null
 
   key_protect_key           = var.kms_key_crn
   backup_encryption_key_crn = local.backup_encryption_key_crn
