@@ -42,4 +42,7 @@ module "etcd_db" {
   tags                       = var.resource_tags
   access_tags                = var.access_tags
   service_credential_names   = var.service_credential_names
+  configuration = {
+    max_connections = 250
+  }
 }
