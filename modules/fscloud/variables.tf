@@ -24,18 +24,6 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "configuration" {
-  description = "Database Configuration."
-  type = object({
-    maxmemory                   = optional(number)
-    maxmemory-policy            = optional(string)
-    appendonly                  = optional(string)
-    maxmemory-samples           = optional(number)
-    stop-writes-on-bgsave-error = optional(string)
-  })
-  default = null
-}
-
 variable "member_memory_mb" {
   type        = number
   description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"

@@ -40,20 +40,17 @@ resource "ibm_iam_authorization_policy" "policy" {
 
 # Create etcd database
 resource "ibm_database" "etcd_db" {
-  depends_on        = [ibm_iam_authorization_policy.policy]
-  resource_group_id = var.resource_group_id
-  name              = var.name
-  service           = "databases-for-etcd"
-  location          = var.region
-  plan              = "standard" # Only standard plan is available for etcd
-  plan_validation   = var.plan_validation
-  version           = var.etcd_version
-  tags              = var.tags
-  adminpassword     = var.admin_pass
-  service_endpoints = var.service_endpoints
-  # remove elements with null values: see https://github.com/terraform-ibm-modules/terraform-ibm-icd-postgresql/issues/273
-  configuration = var.configuration != null ? jsonencode({ for k, v in var.configuration : k => v if v != null }) : null
-
+  depends_on                = [ibm_iam_authorization_policy.policy]
+  resource_group_id         = var.resource_group_id
+  name                      = var.name
+  service                   = "databases-for-etcd"
+  location                  = var.region
+  plan                      = "standard" # Only standard plan is available for etcd
+  plan_validation           = var.plan_validation
+  version                   = var.etcd_version
+  tags                      = var.tags
+  adminpassword             = var.admin_pass
+  service_endpoints         = var.service_endpoints
   key_protect_key           = var.kms_key_crn
   backup_encryption_key_crn = local.backup_encryption_key_crn
 

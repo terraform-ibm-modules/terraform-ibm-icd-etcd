@@ -115,24 +115,6 @@ variable "access_tags" {
   }
 }
 
-variable "configuration" {
-  description = "Database Configuration"
-  type = object({
-    max_connections            = optional(number)
-    max_prepared_transactions  = optional(number)
-    deadlock_timeout           = optional(number)
-    effective_io_concurrency   = optional(number)
-    max_replication_slots      = optional(number)
-    max_wal_senders            = optional(number)
-    shared_buffers             = optional(number)
-    synchronous_commit         = optional(string)
-    wal_level                  = optional(string)
-    archive_timeout            = optional(number)
-    log_min_duration_statement = optional(number)
-  })
-  default = null
-}
-
 variable "service_credential_names" {
   description = "Map of name, role for service credentials that you want to create for the database"
   type        = map(string)
