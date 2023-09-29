@@ -41,7 +41,7 @@
       "description": "Optional rules to allow the database to increase resources in response to usage. Only a single autoscaling block is allowed. Make sure you understand the effects of autoscaling, especially for production environments. See https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-autoscaling in the IBM Cloud Docs.",
       "pos": {
         "filename": "variables.tf",
-        "line": 151
+        "line": 133
       }
     },
     "backup_encryption_key_crn": {
@@ -50,7 +50,7 @@
       "description": "The CRN of a Key Protect key, that you want to use for encrypting disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. If no value passed, the value passed for the 'kms_key_crn' variable will be used. BYOK for backups is available only in US regions us-south and us-east, and eu-de. Only keys in the us-south and eu-de are durable to region failures. To ensure that your backups are available even if a region failure occurs, you must use a key from us-south or eu-de. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported, so if no value is passed here, but a HPCS value is passed for var.kms_key_crn, databases backup encryption will use the default encryption keys.",
       "pos": {
         "filename": "variables.tf",
-        "line": 202
+        "line": 184
       }
     },
     "cbr_rules": {
@@ -67,19 +67,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 228
-      }
-    },
-    "configuration": {
-      "name": "configuration",
-      "type": "object({\n    max_connections            = optional(number)\n    max_prepared_transactions  = optional(number)\n    deadlock_timeout           = optional(number)\n    effective_io_concurrency   = optional(number)\n    max_replication_slots      = optional(number)\n    max_wal_senders            = optional(number)\n    shared_buffers             = optional(number)\n    synchronous_commit         = optional(string)\n    wal_level                  = optional(string)\n    archive_timeout            = optional(number)\n    log_min_duration_statement = optional(number)\n  })",
-      "description": "Database Configuration",
-      "source": [
-        "ibm_database.etcd_db.configuration"
-      ],
-      "pos": {
-        "filename": "variables.tf",
-        "line": 118
+        "line": 210
       }
     },
     "etcd_version": {
@@ -105,7 +93,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 218
+        "line": 200
       },
       "immutable": true,
       "computed": true
@@ -120,7 +108,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 182
+        "line": 164
       }
     },
     "kms_key_crn": {
@@ -132,7 +120,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 188
+        "line": 170
       },
       "immutable": true
     },
@@ -247,7 +235,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 136
+        "line": 118
       }
     },
     "service_endpoints": {
@@ -273,7 +261,7 @@
       "default": false,
       "pos": {
         "filename": "variables.tf",
-        "line": 212
+        "line": 194
       }
     },
     "tags": {
@@ -409,7 +397,6 @@
       "name": "etcd_db",
       "attributes": {
         "adminpassword": "admin_pass",
-        "configuration": "configuration",
         "key_protect_key": "kms_key_crn",
         "location": "region",
         "name": "name",
@@ -456,7 +443,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 175
+        "line": 172
       }
     },
     "ibm_resource_tag.etcd_tag": {
@@ -472,7 +459,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 124
+        "line": 121
       }
     }
   },
@@ -492,7 +479,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 203
+        "line": 200
       }
     }
   },
@@ -571,7 +558,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 135
+        "line": 132
       }
     }
   }
