@@ -47,7 +47,7 @@
     "backup_encryption_key_crn": {
       "name": "backup_encryption_key_crn",
       "type": "string",
-      "description": "The CRN of a Key Protect key, that you want to use for encrypting disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. If no value passed, the value passed for the 'kms_key_crn' variable will be used. BYOK for backups is available only in US regions us-south and us-east, and eu-de. Only keys in the us-south and eu-de are durable to region failures. To ensure that your backups are available even if a region failure occurs, you must use a key from us-south or eu-de. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported, so if no value is passed here, but a HPCS value is passed for var.kms_key_crn, databases backup encryption will use the default encryption keys.",
+      "description": "The CRN of a Key Protect key, that you want to use for encrypting disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. If no value is passed here, the value passed for the 'kms_key_crn' variable is used, unless 'use_default_backup_encryption_key' is set to 'true'. BYOK for backups is available only in US regions us-south and us-east, and eu-de. Only keys in the us-south and eu-de are durable to region failures. To ensure that your backups are available even if a region failure occurs, you must use a key from us-south or eu-de. Take note that Hyper Protect Crypto Services for IBM Cloud® Databases backups is not currently supported, so if no value is passed here, but a HPCS value is passed for var.kms_key_crn, databases backup encryption will use the default encryption keys.",
       "pos": {
         "filename": "variables.tf",
         "line": 184
@@ -67,7 +67,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 210
+        "line": 216
       }
     },
     "etcd_version": {
@@ -93,7 +93,7 @@
       ],
       "pos": {
         "filename": "variables.tf",
-        "line": 200
+        "line": 206
       },
       "immutable": true,
       "computed": true
@@ -261,7 +261,7 @@
       "default": false,
       "pos": {
         "filename": "variables.tf",
-        "line": 194
+        "line": 200
       }
     },
     "tags": {
@@ -275,6 +275,16 @@
       "pos": {
         "filename": "variables.tf",
         "line": 99
+      }
+    },
+    "use_default_backup_encryption_key": {
+      "name": "use_default_backup_encryption_key",
+      "type": "bool",
+      "description": "Set to true to use default ICD randomly generated keys.",
+      "default": false,
+      "pos": {
+        "filename": "variables.tf",
+        "line": 194
       }
     },
     "users": {
@@ -411,7 +421,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 42
+        "line": 44
       }
     },
     "ibm_iam_authorization_policy.policy": {
@@ -428,7 +438,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 32
+        "line": 34
       }
     },
     "ibm_resource_key.service_credentials": {
@@ -443,7 +453,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 172
+        "line": 174
       }
     },
     "ibm_resource_tag.etcd_tag": {
@@ -459,7 +469,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 121
+        "line": 123
       }
     }
   },
@@ -479,7 +489,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 200
+        "line": 202
       }
     }
   },
@@ -558,7 +568,7 @@
       },
       "pos": {
         "filename": "main.tf",
-        "line": 132
+        "line": 134
       }
     }
   }
