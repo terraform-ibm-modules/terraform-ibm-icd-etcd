@@ -87,7 +87,7 @@ func TestRunCompleteUpgradeExample(t *testing.T) {
 		ResourceGroup:      resourceGroup,
 		BestRegionYAMLPath: regionSelectionPath,
 		TerraformVars: map[string]interface{}{
-			"etcd_version": "3.3", // should always test the lowest available version of etcd that the module supports
+			"etcd_version": "3.4", // should always test the lowest available version of etcd that the module supports
 			"users": []map[string]interface{}{
 				{
 					"name":     "testuser",
