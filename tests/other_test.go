@@ -17,7 +17,7 @@ func TestRunBasicExample(t *testing.T) {
 		Prefix:        "etcd",
 		ResourceGroup: resourceGroup,
 		TerraformVars: map[string]interface{}{
-			"etcd_version": "3.3",
+			"etcd_version": "3.4",
 		},
 	})
 
