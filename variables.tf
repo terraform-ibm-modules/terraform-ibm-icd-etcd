@@ -12,12 +12,6 @@ variable "name" {
   description = "The name to give the etcd instance."
 }
 
-variable "plan_validation" {
-  type        = bool
-  description = "Enable or disable validating the database parameters for etcd during the plan phase."
-  default     = true
-}
-
 variable "etcd_version" {
   description = "Version of the etcd instance to provision. If no value passed, the current ICD preferred version is used."
   type        = string
