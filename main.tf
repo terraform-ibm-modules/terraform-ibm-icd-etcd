@@ -40,6 +40,14 @@ resource "ibm_iam_authorization_policy" "policy" {
   roles                       = ["Reader"]
 }
 
+# workaround for https://github.com/IBM-Cloud/terraform-provider-ibm/issues/4478
+resource "time_sleep" "wait_for_authorization_policy" {
+  depends_on = [ibm_iam_authorization_policy.policy]
+
+  create_duration = "30s"
+}
+
+
 # Create etcd database
 resource "ibm_database" "etcd_db" {
   depends_on                = [ibm_iam_authorization_policy.policy]
