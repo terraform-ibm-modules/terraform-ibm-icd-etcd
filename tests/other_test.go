@@ -16,6 +16,9 @@ func TestRunBasicExample(t *testing.T) {
 		TerraformDir:  basicExampleTerraformDir,
 		Prefix:        "etcd",
 		ResourceGroup: resourceGroup,
+		TerraformVars: map[string]interface{}{
+			"etcd_version": "3.4",
+		},
 	})
 
 	output, err := options.RunTestConsistency()

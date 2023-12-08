@@ -19,10 +19,11 @@ variable "etcd_version" {
   validation {
     condition = anytrue([
       var.etcd_version == null,
-      var.etcd_version == "3.3",
-      var.etcd_version == "3.4"
+      var.etcd_version == "3.5",
+      var.etcd_version == "3.4",
+      var.etcd_version == "3.3"
     ])
-    error_message = "Version must be 3.3 or 3.4. "
+    error_message = "Version must be 3.5, 3.4 or 3.3. "
   }
 }
 
@@ -73,7 +74,7 @@ variable "service_endpoints" {
 
 variable "admin_pass" {
   type        = string
-  description = "The password for the database administrator. If the admin password is null then the admin user ID cannot be accessed. More users can be specified in a user block. The admin password must be in the range of 10-32 characters and cannot start with a special character."
+  description = "The password for the database administrator. If the admin password is null then the admin user ID cannot be accessed. More users can be specified in a user block."
   default     = null
   sensitive   = true
 }

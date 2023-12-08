@@ -57,7 +57,7 @@ func TestRunFSCloudExample(t *testing.T) {
 			"access_tags":                permanentResources["accessTags"],
 			"existing_kms_instance_guid": permanentResources["hpcs_south"],
 			"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
-			"etcd_version":               "3.4", // Always lock this test into the latest supported etcd version
+			"etcd_version":               "3.5", // Always lock this test into the latest supported etcd version
 		},
 	})
 	options.SkipTestTearDown = true
@@ -75,10 +75,10 @@ func TestRunFSCloudExample(t *testing.T) {
 func TestRunCompleteUpgradeExample(t *testing.T) {
 	t.Parallel()
 
-	// Generate a 10 char long random string for the admin_pass
-	randomBytes := make([]byte, 10)
-	_, err := rand.Read(randomBytes)
-	randomPass := "A" + base64.URLEncoding.EncodeToString(randomBytes)[:10]
+	// Generate a 15 char long random string for the admin_pass
+	randomBytes := make([]byte, 13)
+	rand.Read(randomBytes)
+	randomPass := "A1" + base64.URLEncoding.EncodeToString(randomBytes)[:13]
 
 	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
 		Testing:            t,
