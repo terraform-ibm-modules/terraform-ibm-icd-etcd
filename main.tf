@@ -48,7 +48,6 @@ resource "ibm_database" "etcd_db" {
   service                   = "databases-for-etcd"
   location                  = var.region
   plan                      = "standard" # Only standard plan is available for etcd
-  plan_validation           = var.plan_validation
   version                   = var.etcd_version
   tags                      = var.tags
   adminpassword             = var.admin_pass
