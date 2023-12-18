@@ -10,7 +10,21 @@ This module implements an instance of the IBM Cloud Databases for etcd service.
 
 :exclamation: The module does not support major version upgrades or updates to encryption and backup encryption keys. To upgrade the version, create another instance of Databases for etcd with the updated version.
 
-## Usage
+<!-- Below content is automatically populated via pre-commit hook -->
+<!-- BEGIN OVERVIEW HOOK -->
+## Overview
+* [terraform-ibm-icd-etcd](#terraform-ibm-icd-etcd)
+* [Submodules](./modules)
+    * [fscloud](./modules/fscloud)
+* [Examples](./examples)
+    * [Basic example](./examples/basic)
+    * [Complete example with BYOK encryption, autoscaling, and service credential creation](./examples/complete)
+    * [Financial Services Cloud profile example with autoscaling enabled](./examples/fscloud)
+* [Contributing](#contributing)
+<!-- END OVERVIEW HOOK -->
+
+## terraform-ibm-icd-etcd
+### Usage
 
 IBM Cloud Databases supports only Key Protect encryption for backups, not Hyper Protect Crypto Services. If you enable key management encryption and no value is passed for 'backup_encryption_key_crn', the value of 'kms_key_crn' is used. And if a HPCS value is set for `kms_key_crn`, the database backup encryption uses the default encryption keys. For more information, see [Hyper Protect Crypto Services Integration](https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs) in the IBM Cloud Docs.
 
@@ -21,16 +35,15 @@ provider "ibm" {
 }
 
 module "ectd_db" {
-  # Replace "master" with a GIT release version to lock into a specific release
   source            = "terraform-ibm-modules/icd-etcd/ibm"
-  version           = "3.4"
+  version           = "X.X.X" # Replace "X.X.X" with a release version to lock into a specific release
   resource_group_id = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
   name              = "my-etcd-instance"
   region            = "us-south"
 }
 ```
 
-## Required IAM access policies
+### Required IAM access policies
 
 You need the following permissions to run this module.
 
@@ -39,13 +52,6 @@ You need the following permissions to run this module.
         - `Editor` role access
 
 <!-- END MODULE HOOK -->
-<!-- BEGIN EXAMPLES HOOK -->
-## Examples
-
-- [ Basic example](examples/basic)
-- [ Complete example with BYOK encryption, autoscaling, and service credential creation](examples/complete)
-- [ Financial Services Cloud profile example with autoscaling enabled](examples/fscloud)
-<!-- END EXAMPLES HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ### Requirements
 
