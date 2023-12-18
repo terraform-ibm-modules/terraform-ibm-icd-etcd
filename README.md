@@ -35,16 +35,15 @@ provider "ibm" {
 }
 
 module "ectd_db" {
-  # Replace "master" with a GIT release version to lock into a specific release
   source            = "terraform-ibm-modules/icd-etcd/ibm"
-  version           = "3.4"
+  version           = "X.X.X" # Replace "X.X.X" with a release version to lock into a specific release
   resource_group_id = "xxXXxxXXxXxXXXXxxXxxxXXXXxXXXXX"
   name              = "my-etcd-instance"
   region            = "us-south"
 }
 ```
 
-## Required IAM access policies
+### Required IAM access policies
 
 You need the following permissions to run this module.
 
