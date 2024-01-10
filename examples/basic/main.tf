@@ -19,6 +19,7 @@ module "etcd_db" {
   resource_group_id = module.resource_group.resource_group_id
   name              = "${var.prefix}-etcd"
   region            = var.region
+  etcd_version      = var.etcd_version
   tags              = var.resource_tags
   access_tags       = var.access_tags
 }
