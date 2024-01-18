@@ -22,6 +22,12 @@ variable "resource_group" {
   default     = null
 }
 
+variable "etcd_version" {
+  type        = string
+  description = "Version of the etcd instance to provision. If no value is passed, the current preferred version of IBM Cloud Databases is used."
+  default     = null
+}
+
 variable "access_tags" {
   type        = list(string)
   description = "A list of access tags to apply to the etcd db instance created by the module, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial for more details"
