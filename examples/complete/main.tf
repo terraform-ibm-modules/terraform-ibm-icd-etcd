@@ -21,7 +21,16 @@ module "key_protect_all_inclusive" {
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
-  key_map                   = { "icd-etcd" = ["${var.prefix}-etcd"] }
+  keys = [
+    {
+      key_ring_name = "icd-etcd"
+      keys = [
+        {
+          key_name = "${var.prefix}-etcd"
+        }
+      ]
+    }
+  ]
 }
 
 ##############################################################################
@@ -38,7 +47,7 @@ module "etcd_db" {
   admin_pass                 = var.admin_pass
   users                      = var.users
   kms_key_crn                = module.key_protect_all_inclusive.keys["icd-etcd.${var.prefix}-etcd"].crn
-  existing_kms_instance_guid = module.key_protect_all_inclusive.key_protect_guid
+  existing_kms_instance_guid = module.key_protect_all_inclusive.kms_guid
   tags                       = var.resource_tags
   access_tags                = var.access_tags
   service_credential_names   = var.service_credential_names
