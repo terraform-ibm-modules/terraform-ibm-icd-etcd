@@ -10,6 +10,7 @@ import (
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
+	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/cloudinfo"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/common"
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
@@ -28,7 +29,10 @@ const yamlLocation = "../common-dev-assets/common-go-assets/common-permanent-res
 
 var permanentResources map[string]interface{}
 
+var sharedInfoSvc *cloudinfo.CloudInfoService
+
 func TestMain(m *testing.M) {
+	sharedInfoSvc, _ = cloudinfo.NewCloudInfoServiceFromEnv("TF_VAR_ibmcloud_api_key", cloudinfo.CloudInfoServiceOptions{})
 
 	var err error
 	permanentResources, err = common.LoadMapFromYaml(yamlLocation)
@@ -59,6 +63,7 @@ func TestRunFSCloudExample(t *testing.T) {
 			"kms_key_crn":                permanentResources["hpcs_south_root_key_crn"],
 			"etcd_version":               "3.5", // Always lock this test into the latest supported etcd version
 		},
+		CloudInfoService: sharedInfoSvc,
 	})
 	options.SkipTestTearDown = true
 	output, err := options.RunTestConsistency()
@@ -100,6 +105,7 @@ func TestRunCompleteUpgradeExample(t *testing.T) {
 			},
 			"admin_pass": randomPass,
 		},
+		CloudInfoService: sharedInfoSvc,
 	})
 
 	output, err := options.RunTestUpgrade()
