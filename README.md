@@ -20,7 +20,6 @@ This module implements an instance of the IBM Cloud Databases for etcd service.
     * [Basic example](./examples/basic)
     * [Complete example with BYOK encryption, autoscaling, and service credential creation](./examples/complete)
     * [Financial Services Cloud profile example with autoscaling enabled](./examples/fscloud)
-    * [Restore from backup example](./examples/backup)
 * [Contributing](#contributing)
 <!-- END OVERVIEW HOOK -->
 
