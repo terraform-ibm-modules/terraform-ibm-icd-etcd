@@ -20,10 +20,9 @@ variable "etcd_version" {
     condition = anytrue([
       var.etcd_version == null,
       var.etcd_version == "3.5",
-      var.etcd_version == "3.4",
-      var.etcd_version == "3.3"
+      var.etcd_version == "3.4"
     ])
-    error_message = "Version must be 3.5, 3.4 or 3.3. "
+    error_message = "Version must be 3.5 or 3.4."
   }
 }
 
