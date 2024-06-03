@@ -27,7 +27,7 @@ module "key_protect_all_inclusive" {
       force_delete_key_ring = true
       keys = [
         {
-          key_name = "${var.prefix}-etcd"
+          key_name     = "${var.prefix}-etcd"
           force_delete = true
         }
       ]
