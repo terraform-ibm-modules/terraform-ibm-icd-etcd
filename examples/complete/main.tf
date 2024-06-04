@@ -16,17 +16,19 @@ module "resource_group" {
 
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
-  version                   = "4.13.0"
+  version                   = "4.13.1"
   resource_group_id         = module.resource_group.resource_group_id
   region                    = var.region
   key_protect_instance_name = "${var.prefix}-kp"
   resource_tags             = var.resource_tags
   keys = [
     {
-      key_ring_name = "icd-etcd"
+      key_ring_name         = "icd-etcd"
+      force_delete_key_ring = true
       keys = [
         {
-          key_name = "${var.prefix}-etcd"
+          key_name     = "${var.prefix}-etcd"
+          force_delete = true
         }
       ]
     }
