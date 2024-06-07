@@ -8,7 +8,7 @@
 
 This module implements an instance of the IBM Cloud Databases for etcd service.
 
-:exclamation: The module does not support major version upgrades or updates to encryption and backup encryption keys. To upgrade the version, create another instance of Databases for etcd with the updated version.
+:exclamation: The module does not support major version upgrades. To upgrade the version, create another instance of Databases for etcd with the updated version.
 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
@@ -26,7 +26,11 @@ This module implements an instance of the IBM Cloud Databases for etcd service.
 ## terraform-ibm-icd-etcd
 ### Usage
 
-IBM Cloud Databases supports only Key Protect encryption for backups, not Hyper Protect Crypto Services. If you enable key management encryption and no value is passed for 'backup_encryption_key_crn', the value of 'kms_key_crn' is used. And if a HPCS value is set for `kms_key_crn`, the database backup encryption uses the default encryption keys. For more information, see [Hyper Protect Crypto Services Integration](https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs) in the IBM Cloud Docs.
+IBM Cloud Databases supports:
+- Key Protect encryption in `us-south`, `us-east`, and `eu-de` for backup encryption. For more information, see [Bring Your Own Key for Backups](https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-key-protect&interface=ui#key-byok) in the IBM Cloud Docs.
+- Hyper Protect Crypto Services in `eu-es` for backup encryption.For more information, see [Hyper Protect Crypto Services for Backup encryption](https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs#use-hpcs-backups) in the IBM Cloud Docs.
+
+If you enable key management encryption and no value is passed for 'backup_encryption_key_crn', the value of 'kms_key_crn' is used
 
 ```hcl
 provider "ibm" {
