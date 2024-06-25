@@ -8,7 +8,9 @@
 
 This module implements an instance of the IBM Cloud Databases for etcd service.
 
-:exclamation: The module does not support major version upgrades. To upgrade the version, create another instance of Databases for etcd with the updated version.
+:exclamation: The module does not support major version upgrades or updates to disk encryption and backup encryption keys. To upgrade the version, create another instance of Databases for etcd with the updated version.
+
+:exclamation: The module only supports setting the disk encryption and backup encryption key CRNs on creation and no update support is available. The KMS manual or automatic key rotation may be used to change the key value and initiate the re-encryption of the deployment.
 
 <!-- Below content is automatically populated via pre-commit hook -->
 <!-- BEGIN OVERVIEW HOOK -->
