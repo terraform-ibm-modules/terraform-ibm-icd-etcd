@@ -53,4 +53,5 @@ module "etcd_db" {
   tags                       = var.resource_tags
   access_tags                = var.access_tags
   service_credential_names   = var.service_credential_names
+  member_host_flavor         = "multitenant"
 }
