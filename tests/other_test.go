@@ -2,6 +2,7 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -51,4 +52,24 @@ func TestPlanICDVersions(t *testing.T) {
 	for _, version := range versions {
 		t.Run(version, func(t *testing.T) { testPlanICDVersions(t, version) })
 	}
+}
+
+func TestRunRestoredDBExample(t *testing.T) {
+	t.Parallel()
+
+	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
+		Testing:       t,
+		TerraformDir:  "examples/backup-restore",
+		Prefix:        "etcd-restored",
+		ResourceGroup: resourceGroup,
+		Region:        fmt.Sprint(permanentResources["etcd_region"]),
+		TerraformVars: map[string]interface{}{
+			"etcd_db_crn": permanentResources["etcd_crn"],
+		},
+		CloudInfoService: sharedInfoSvc,
+	})
+
+	output, err := options.RunTestConsistency()
+	assert.Nil(t, err, "This should not have errored")
+	assert.NotNil(t, output, "Expected some output")
 }
