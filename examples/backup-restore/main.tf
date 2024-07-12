@@ -16,12 +16,13 @@ data "ibm_database_backups" "backup_database" {
 
 # New etcd db instance pointing to the backup instance
 module "restored_etcd_db" {
-  source            = "../.."
-  resource_group_id = module.resource_group.resource_group_id
-  name              = "${var.prefix}-etcd-restored"
-  region            = var.region
-  etcd_version      = var.etcd_version
-  access_tags       = var.access_tags
-  tags              = var.resource_tags
-  backup_crn        = data.ibm_database_backups.backup_database.backups[0].backup_id
+  source             = "../.."
+  resource_group_id  = module.resource_group.resource_group_id
+  name               = "${var.prefix}-etcd-restored"
+  region             = var.region
+  etcd_version       = var.etcd_version
+  access_tags        = var.access_tags
+  tags               = var.resource_tags
+  member_host_flavor = "multitenant"
+  backup_crn         = data.ibm_database_backups.backup_database.backups[0].backup_id
 }

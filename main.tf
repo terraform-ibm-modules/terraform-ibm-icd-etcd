@@ -22,6 +22,9 @@ locals {
   # Determine if auto scaling is enabled
   auto_scaling_enabled = var.auto_scaling == null ? [] : [1]
 
+  # Determine if host_flavor is used
+  host_flavor_set = var.member_host_flavor != null ? true : false
+
   # Determine what KMS service is being used for database encryption
   kms_service = var.kms_key_crn != null ? (
     can(regex(".*kms.*", var.kms_key_crn)) ? "kms" : (
@@ -74,22 +77,68 @@ resource "ibm_database" "etcd_db" {
     }
   }
 
-  group {
-    group_id = "member" #Only member type is allowed for etcd
-    memory {
-      allocation_mb = var.member_memory_mb
-    }
-    disk {
-      allocation_mb = var.member_disk_mb
-    }
-    cpu {
-      allocation_count = var.member_cpu_count
-    }
-
-    members {
-      allocation_count = var.members
+  ## This for_each block is NOT a loop to attach to multiple group blocks.
+  ## This is used to conditionally add one, OR, the other group block depending on var.local.host_flavor_set
+  ## This block is for if host_flavor IS set to specific pre-defined host sizes and not set to "multitenant"
+  dynamic "group" {
+    for_each = local.host_flavor_set && var.member_host_flavor != "multitenant" ? [1] : []
+    content {
+      group_id = "member" # Only member type is allowed for IBM Cloud Databases
+      host_flavor {
+        id = var.member_host_flavor
+      }
+      disk {
+        allocation_mb = var.member_disk_mb
+      }
+      members {
+        allocation_count = var.members
+      }
     }
   }
+
+  ## This block is for if host_flavor IS set to "multitenant"
+  dynamic "group" {
+    for_each = local.host_flavor_set && var.member_host_flavor == "multitenant" ? [1] : []
+    content {
+      group_id = "member" # Only member type is allowed for IBM Cloud Databases
+      host_flavor {
+        id = var.member_host_flavor
+      }
+      disk {
+        allocation_mb = var.member_disk_mb
+      }
+      memory {
+        allocation_mb = var.member_memory_mb
+      }
+      cpu {
+        allocation_count = var.member_cpu_count
+      }
+      members {
+        allocation_count = var.members
+      }
+    }
+  }
+
+  ## This block is for if host_flavor IS NOT set
+  dynamic "group" {
+    for_each = local.host_flavor_set ? [] : [1]
+    content {
+      group_id = "member" # Only member type is allowed for IBM Cloud Databases
+      memory {
+        allocation_mb = var.member_memory_mb
+      }
+      disk {
+        allocation_mb = var.member_disk_mb
+      }
+      cpu {
+        allocation_count = var.member_cpu_count
+      }
+      members {
+        allocation_count = var.members
+      }
+    }
+  }
+
   dynamic "auto_scaling" {
     for_each = local.auto_scaling_enabled
     content {
@@ -165,7 +214,7 @@ module "cbr_rule" {
       }
     ]
   }]
-  #  There is only 1 operation type for Elasticsearch so it is not exposed as a configuration
+  #  There is only 1 operation type for etcd so it is not exposed as a configuration
   operations = [{
     api_types = [
       {
