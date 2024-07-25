@@ -32,25 +32,28 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "member_memory_mb" {
+##############################################################################
+# ICD hosting model properties
+##############################################################################
+variable "members" {
   type        = number
-  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
-  default     = 4096
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
-}
-
-variable "member_disk_mb" {
-  type        = number
-  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
-  default     = 20480
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
+  description = "Allocated number of members. Members can be scaled up but not down."
+  default     = 3
+  # Validation is done in the Terraform plan phase by the IBM provider, so no need to add extra validation here.
 }
 
 variable "member_cpu_count" {
   type        = number
   description = "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 0
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
+  # Validation is done in the Terraform plan phase by the IBM provider, so no need to add extra validation here.
+}
+
+variable "member_disk_mb" {
+  type        = number
+  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  default     = 20480
+  # Validation is done in the Terraform plan phase by the IBM provider, so no need to add extra validation here.
 }
 
 variable "member_host_flavor" {
@@ -60,22 +63,11 @@ variable "member_host_flavor" {
   # Validation is done in the Terraform plan phase by the IBM provider, so no need to add extra validation here.
 }
 
-# actual scaling of the resources could take some time to apply
-variable "members" {
+variable "member_memory_mb" {
   type        = number
-  description = "Allocated number of members. Members can be scaled up but not down."
-  default     = 3
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
-}
-
-variable "service_endpoints" {
-  type        = string
-  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'."
-  default     = "private"
-  validation {
-    condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
-    error_message = "Valid values for service_endpoints are 'public', 'public-and-private', and 'private'"
-  }
+  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  default     = 4096
+  # Validation is done in the Terraform plan phase by the IBM provider, so no need to add extra validation here.
 }
 
 variable "admin_pass" {
@@ -97,6 +89,27 @@ variable "users" {
   description = "A list of users that you want to create on the database. Multiple blocks are allowed. The user password must be in the range of 10-32 characters. Be warned that in most case using IAM service credentials (via the var.service_credential_names) is sufficient to control access to the Etcd instance. This blocks creates native etcd database users, more info on that can be found here https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-user-management"
 }
 
+variable "service_credential_names" {
+  description = "Map of name, role for service credentials that you want to create for the database"
+  type        = map(string)
+  default     = {}
+
+  validation {
+    condition     = alltrue([for name, role in var.service_credential_names : contains(["Administrator", "Operator", "Viewer", "Editor"], role)])
+    error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
+  }
+}
+
+variable "service_endpoints" {
+  type        = string
+  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are 'public', 'private', or 'public-and-private'."
+  default     = "private"
+  validation {
+    condition     = contains(["public", "private", "public-and-private"], var.service_endpoints)
+    error_message = "Valid values for service_endpoints are 'public', 'public-and-private', and 'private'"
+  }
+}
+
 variable "tags" {
   type        = list(any)
   description = "Optional list of tags to be added to the etcd instance."
@@ -113,17 +126,6 @@ variable "access_tags" {
       for tag in var.access_tags : can(regex("[\\w\\-_\\.]+:[\\w\\-_\\.]+", tag)) && length(tag) <= 128
     ])
     error_message = "Tags must match the regular expression \"[\\w\\-_\\.]+:[\\w\\-_\\.]+\", see https://cloud.ibm.com/docs/account?topic=account-tag&interface=ui#limits for more details"
-  }
-}
-
-variable "service_credential_names" {
-  description = "Map of name, role for service credentials that you want to create for the database"
-  type        = map(string)
-  default     = {}
-
-  validation {
-    condition     = alltrue([for name, role in var.service_credential_names : contains(["Administrator", "Operator", "Viewer", "Editor"], role)])
-    error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
   }
 }
 
