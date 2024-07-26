@@ -8,8 +8,8 @@ variable "resource_group_id" {
 }
 
 variable "name" {
-  description = "Name of the etcd_db instance"
   type        = string
+  description = "Name of the etcd_db instance"
 }
 
 variable "etcd_version" {
@@ -24,51 +24,37 @@ variable "region" {
   default     = "us-south"
 }
 
-variable "member_memory_mb" {
+##############################################################################
+# ICD hosting model properties
+##############################################################################
+variable "members" {
   type        = number
-  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
-  default     = 4096
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
-}
-
-variable "member_disk_mb" {
-  type        = number
-  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
-  default     = 20480
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
+  description = "Allocated number of members. Members can be scaled up but not down."
+  default     = 3
 }
 
 variable "member_cpu_count" {
   type        = number
   description = "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
   default     = 0
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
+}
+
+variable "member_disk_mb" {
+  type        = number
+  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  default     = 20480
 }
 
 variable "member_host_flavor" {
   type        = string
   description = "Allocated host flavor per member. [Learn more](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/resources/database#host_flavor)."
   default     = null
-  # Validation is done in the Terraform plan phase by the IBM provider, so no need to add extra validation here.
 }
 
-# actual scaling of the resources could take some time to apply
-variable "members" {
+variable "member_memory_mb" {
   type        = number
-  description = "Allocated number of members. Members can be scaled up but not down."
-  default     = 3
-  # Validation is done in terraform plan phase by IBM provider, so no need to add any extra validation here
-}
-
-variable "service_credential_names" {
-  description = "Map of name, role for service credentials that you want to create for the database"
-  type        = map(string)
-  default     = {}
-
-  validation {
-    condition     = alltrue([for name, role in var.service_credential_names : contains(["Administrator", "Operator", "Viewer", "Editor"], role)])
-    error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
-  }
+  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  default     = 4096
 }
 
 variable "admin_pass" {
@@ -90,6 +76,17 @@ variable "users" {
   description = "A list of users that you want to create on the database. Multiple blocks are allowed. The user password must be in the range of 10-32 characters. Be warned that in most case using IAM service credentials (via the var.service_credential_names) is sufficient to control access to the etcd instance. This blocks creates native etcd database users, more info on that can be found here https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-user-management&interface=ui"
 }
 
+variable "service_credential_names" {
+  description = "Map of name, role for service credentials that you want to create for the database"
+  type        = map(string)
+  default     = {}
+
+  validation {
+    condition     = alltrue([for name, role in var.service_credential_names : contains(["Administrator", "Operator", "Viewer", "Editor"], role)])
+    error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
+  }
+}
+
 variable "tags" {
   type        = list(any)
   description = "Optional list of tags to be added to the etcd instance."
@@ -100,35 +97,6 @@ variable "access_tags" {
   type        = list(string)
   description = "A list of access tags to apply to the etcd db instance created by the module, see https://cloud.ibm.com/docs/account?topic=account-access-tags-tutorial for more details"
   default     = []
-}
-
-variable "kms_key_crn" {
-  type        = string
-  description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption."
-}
-
-variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto Services instance."
-  type        = string
-}
-
-variable "skip_iam_authorization_policy" {
-  type        = bool
-  description = "Set to true to skip the creation of an IAM authorization policy that permits all etcd database instances in the given resource group to read the encryption key from the Hyper Protect or Key Protect instance passed in var.existing_kms_instance_guid. If set to 'false', a value must be passed for var.existing_kms_instance_guid. No policy is created if var.kms_encryption_enabled is set to 'false'."
-  default     = false
-}
-
-variable "backup_crn" {
-  type        = string
-  description = "The CRN of a backup resource to restore from. The backup is created by a database deployment with the same service ID. The backup is loaded after provisioning and the new deployment starts up that uses that data. A backup CRN is in the format crn:v1:<…>:backup:. If omitted, the database is provisioned empty."
-  default     = null
-}
-
-variable "backup_encryption_key_crn" {
-  type        = string
-  description = "The CRN of a Hyper Protect Crypto Service use for encrypting the disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. There are limitation per region on the Hyper Protect Crypto Services and region for those services. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs#use-hpcs-backups"
-  default     = null
-  # Validation happens in the root module
 }
 
 ##############################################################
@@ -163,6 +131,33 @@ variable "auto_scaling" {
 }
 
 ##############################################################
+# Encryption
+##############################################################
+
+variable "kms_key_crn" {
+  type        = string
+  description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption."
+}
+
+variable "backup_encryption_key_crn" {
+  type        = string
+  description = "The CRN of a Hyper Protect Crypto Service use for encrypting the disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. There are limitation per region on the Hyper Protect Crypto Services and region for those services. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs#use-hpcs-backups"
+  default     = null
+  # Validation happens in the root module
+}
+
+variable "skip_iam_authorization_policy" {
+  type        = bool
+  description = "Set to true to skip the creation of an IAM authorization policy that permits all etcd database instances in the given resource group to read the encryption key from the Hyper Protect or Key Protect instance passed in var.existing_kms_instance_guid. If set to 'false', a value must be passed for var.existing_kms_instance_guid. No policy is created if var.kms_encryption_enabled is set to 'false'."
+  default     = false
+}
+
+variable "existing_kms_instance_guid" {
+  description = "The GUID of the Hyper Protect Crypto Services instance."
+  type        = string
+}
+
+##############################################################
 # Context-based restriction (CBR)
 ##############################################################
 
@@ -180,4 +175,14 @@ variable "cbr_rules" {
   description = "(Optional, list) List of CBR rules to create"
   default     = []
   # Validation happens in the rule module
+}
+
+##############################################################
+# Backup
+##############################################################
+
+variable "backup_crn" {
+  type        = string
+  description = "The CRN of a backup resource to restore from. The backup is created by a database deployment with the same service ID. The backup is loaded after provisioning and the new deployment starts up that uses that data. A backup CRN is in the format crn:v1:<…>:backup:. If omitted, the database is provisioned empty."
+  default     = null
 }
