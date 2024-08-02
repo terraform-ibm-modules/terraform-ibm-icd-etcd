@@ -4,29 +4,30 @@
 
 variable "resource_group_id" {
   type        = string
-  description = "The resource group ID where the etcd_db instance will be created."
+  description = "The resource group ID where the etcd instance will be created."
 }
 
 variable "name" {
   type        = string
-  description = "Name of the etcd_db instance"
+  description = "The name given to the etcd instance."
 }
 
 variable "etcd_version" {
-  description = "Version of the etcd instance to provision. If no value passed, the current ICD preferred version is used."
   type        = string
+  description = "Version of the etcd instance to provision. If no value passed, the current ICD preferred version is used."
   default     = null
 }
 
 variable "region" {
-  description = "The region where you want to deploy your instance. Must be the same region as the Hyper Protect Crypto Services instance."
   type        = string
+  description = "The region where you want to deploy your instance. Must be the same region as the Hyper Protect Crypto Services instance."
   default     = "us-south"
 }
 
 ##############################################################################
 # ICD hosting model properties
 ##############################################################################
+
 variable "members" {
   type        = number
   description = "Allocated number of members. Members can be scaled up but not down."
@@ -35,13 +36,13 @@ variable "members" {
 
 variable "member_cpu_count" {
   type        = number
-  description = "Allocated dedicated CPU per-member. For shared CPU, set to 0. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  description = "Allocated dedicated CPU per-member. For shared CPU, set to 0. [Learn more](https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling)"
   default     = 0
 }
 
 variable "member_disk_mb" {
   type        = number
-  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  description = "Allocated memory per-member. [Learn more](https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling)"
   default     = 20480
 }
 
@@ -53,7 +54,7 @@ variable "member_host_flavor" {
 
 variable "member_memory_mb" {
   type        = number
-  description = "Allocated memory per-member. See the following doc for supported values: https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling"
+  description = "Allocated memory per-member. [Learn more](https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-resources-scaling)"
   default     = 4096
 }
 
@@ -71,20 +72,15 @@ variable "users" {
     type     = string # "type" is required to generate the connection string for the outputs.
     role     = optional(string)
   }))
+  description = "A list of users that you want to create on the database. Multiple blocks are allowed. The user password must be in the range of 10-32 characters. Be warned that in most case using IAM service credentials (via the var.service_credential_names) is sufficient to control access to the etcd instance. This blocks creates native etcd database users, more info on that can be found here https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-user-management"
   default     = []
   sensitive   = true
-  description = "A list of users that you want to create on the database. Multiple blocks are allowed. The user password must be in the range of 10-32 characters. Be warned that in most case using IAM service credentials (via the var.service_credential_names) is sufficient to control access to the etcd instance. This blocks creates native etcd database users, more info on that can be found here https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-user-management&interface=ui"
 }
 
 variable "service_credential_names" {
-  description = "Map of name, role for service credentials that you want to create for the database"
   type        = map(string)
+  description = "Map of name, role for service credentials that you want to create for the database"
   default     = {}
-
-  validation {
-    condition     = alltrue([for name, role in var.service_credential_names : contains(["Administrator", "Operator", "Viewer", "Editor"], role)])
-    error_message = "Valid values for service credential roles are 'Administrator', 'Operator', 'Viewer', and `Editor`"
-  }
 }
 
 variable "tags" {
@@ -136,14 +132,13 @@ variable "auto_scaling" {
 
 variable "kms_key_crn" {
   type        = string
-  description = "The root key CRN of the Hyper Protect Crypto Service (HPCS) to use for disk encryption."
+  description = "The root key CRN of the Hyper Protect Crypto Services (HPCS) to use for disk encryption."
 }
 
 variable "backup_encryption_key_crn" {
   type        = string
-  description = "The CRN of a Hyper Protect Crypto Service use for encrypting the disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. There are limitation per region on the Hyper Protect Crypto Services and region for those services. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs#use-hpcs-backups"
+  description = "The CRN of a Hyper Protect Crypto Services use for encrypting the disk that holds deployment backups. Only used if var.kms_encryption_enabled is set to true. There are limitation per region on the Hyper Protect Crypto Services and region for those services. See https://cloud.ibm.com/docs/cloud-databases?topic=cloud-databases-hpcs#use-hpcs-backups"
   default     = null
-  # Validation happens in the root module
 }
 
 variable "skip_iam_authorization_policy" {
@@ -153,8 +148,8 @@ variable "skip_iam_authorization_policy" {
 }
 
 variable "existing_kms_instance_guid" {
-  description = "The GUID of the Hyper Protect Crypto Services instance."
   type        = string
+  description = "The GUID of the Hyper Protect Crypto Services instance."
 }
 
 ##############################################################
