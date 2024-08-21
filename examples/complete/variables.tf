@@ -66,6 +66,6 @@ variable "service_credential_names" {
     "etcd_admin" : "Administrator",
     "etcd_operator" : "Operator",
     "etcd_viewer" : "Viewer",
-    "etcd_viewer" : "Editor",
+    "etcd_editor" : "Editor",
   }
 }
