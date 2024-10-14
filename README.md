@@ -6,6 +6,12 @@
 [![latest release](https://img.shields.io/github/v/release/terraform-ibm-modules/terraform-ibm-icd-etcd?logo=GitHub&sort=semver)](https://github.com/terraform-ibm-modules/terraform-ibm-icd-etcd/releases/latest)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
+---
+
+:warning: **Deprecated**: IBM Cloud® is announcing the full deprecation of IBM Cloud® Databases for etcd on 15 October 2025. After this date, any deployments of IBM Cloud® Databases for etcd that are still running will be permanently disabled and deprovisioned. [Learn more](https://cloud.ibm.com/docs/databases-for-etcd?topic=databases-for-etcd-deprecation&interface=ui)
+
+---
+
 This module implements an instance of the IBM Cloud Databases for etcd service.
 
 :exclamation: The module does not support major version upgrades or updates to disk encryption and backup encryption keys. To upgrade the version, create another instance of Databases for etcd with the updated version.
