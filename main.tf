@@ -124,7 +124,7 @@ resource "ibm_database" "etcd_db" {
 
   ## This block is for if host_flavor IS NOT set
   dynamic "group" {
-    for_each = local.host_flavor_set && var.backup_crn == null ? [] : [1]
+    for_each = !local.host_flavor_set && var.backup_crn == null ? [1] : []
     content {
       group_id = "member" # Only member type is allowed for IBM Cloud Databases
       memory {
