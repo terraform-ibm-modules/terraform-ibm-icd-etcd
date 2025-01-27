@@ -14,6 +14,11 @@ module "resource_group" {
 # Key Protect All Inclusive
 ##############################################################################
 
+locals {
+  data_key_name    = "${var.prefix}-etcd"
+  backups_key_name = "${var.prefix}-etcd-backups"
+}
+
 module "key_protect_all_inclusive" {
   source                    = "terraform-ibm-modules/kms-all-inclusive/ibm"
   version                   = "4.19.2"
@@ -26,7 +31,11 @@ module "key_protect_all_inclusive" {
       key_ring_name = "icd-etcd"
       keys = [
         {
-          key_name     = "${var.prefix}-etcd"
+          key_name     = local.data_key_name
+          force_delete = true
+        },
+        {
+          key_name     = local.backups_key_name
           force_delete = true
         }
       ]
@@ -39,18 +48,24 @@ module "key_protect_all_inclusive" {
 ##############################################################################
 
 module "etcd_db" {
-  source                     = "../../"
-  resource_group_id          = module.resource_group.resource_group_id
-  name                       = "${var.prefix}-etcd"
-  region                     = var.region
-  etcd_version               = var.etcd_version
-  kms_encryption_enabled     = true
-  admin_pass                 = var.admin_pass
-  users                      = var.users
-  kms_key_crn                = module.key_protect_all_inclusive.keys["icd-etcd.${var.prefix}-etcd"].crn
-  existing_kms_instance_guid = module.key_protect_all_inclusive.kms_guid
-  tags                       = var.resource_tags
-  access_tags                = var.access_tags
-  service_credential_names   = var.service_credential_names
-  member_host_flavor         = "multitenant"
+  source            = "../../"
+  resource_group_id = module.resource_group.resource_group_id
+  etcd_version      = var.etcd_version
+  name              = "${var.prefix}-etcd"
+  region            = var.region
+  admin_pass        = var.admin_pass
+  users             = var.users
+  # Example of how to use different KMS keys for data and backups
+  use_ibm_owned_encryption_key = false
+  use_same_kms_key_for_backups = false
+  kms_key_crn                  = module.key_protect_all_inclusive.keys["icd.${var.prefix}-etcd"].crn
+  backup_encryption_key_crn    = module.key_protect_all_inclusive.keys["icd.${local.data_key_name}"].crn
+  service_credential_names = {
+    "etcd_admin" : "Administrator",
+    "etcd_operator" : "Operator",
+    "etcd_viewer" : "Viewer",
+    "etcd_editor" : "Editor",
+  }
+  access_tags        = var.access_tags
+  member_host_flavor = "multitenant"
 }
