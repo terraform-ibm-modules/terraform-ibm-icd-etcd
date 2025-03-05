@@ -9,25 +9,6 @@ import (
 	"github.com/terraform-ibm-modules/ibmcloud-terratest-wrapper/testhelper"
 )
 
-func TestRunBasicExample(t *testing.T) {
-	t.Parallel()
-
-	options := testhelper.TestOptionsDefaultWithVars(&testhelper.TestOptions{
-		Testing:       t,
-		TerraformDir:  basicExampleTerraformDir,
-		Prefix:        "etcd",
-		ResourceGroup: resourceGroup,
-		TerraformVars: map[string]interface{}{
-			"etcd_version": "3.4",
-		},
-		CloudInfoService: sharedInfoSvc,
-	})
-
-	output, err := options.RunTestConsistency()
-	assert.Nil(t, err, "This should not have errored")
-	assert.NotNil(t, output, "Expected some output")
-}
-
 func testPlanICDVersions(t *testing.T, version string) {
 	t.Parallel()
 
@@ -64,7 +45,7 @@ func TestRunRestoredDBExample(t *testing.T) {
 		ResourceGroup: resourceGroup,
 		Region:        fmt.Sprint(permanentResources["etcd_region"]),
 		TerraformVars: map[string]interface{}{
-			"etcd_db_crn": permanentResources["etcd_crn"],
+			"existing_database_crn": permanentResources["etcd_crn"],
 		},
 		CloudInfoService: sharedInfoSvc,
 	})

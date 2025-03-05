@@ -2,12 +2,12 @@
 # Outputs
 ##############################################################################
 
-output "restored_etcd_db_id" {
+output "restored_icd_etcd_id" {
   description = "Restored etcd db instance id"
-  value       = module.restored_etcd_db.id
+  value       = module.restored_icd_etcd.id
 }
 
-output "restored_etcd_db_version" {
+output "restored_icd_etcd_version" {
   description = "Restored etcd instance version"
-  value       = module.restored_etcd_db.version
+  value       = module.restored_icd_etcd.version
 }
