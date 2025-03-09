@@ -40,7 +40,7 @@ variable "access_tags" {
   default     = []
 }
 
-variable "etcd_db_crn" {
+variable "existing_database_crn" {
   type        = string
   description = "The existing CRN of a etcd instance to fetch the latest backup crn."
 }
