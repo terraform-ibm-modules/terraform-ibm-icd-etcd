@@ -6,7 +6,7 @@ output "id" {
   value       = module.database.id
 }
 output "etcd_crn" {
-  description = "Redis CRN"
+  description = "Etcd CRN"
   value       = module.database.crn
 }
 
