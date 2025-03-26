@@ -3,31 +3,35 @@
 ##############################################################################
 output "id" {
   description = "Etcd instance id"
-  value       = module.etcd_db.id
+  value       = module.database.id
+}
+output "etcd_crn" {
+  description = "Etcd CRN"
+  value       = module.database.crn
 }
 
 output "version" {
   description = "Etcd instance version"
-  value       = module.etcd_db.version
+  value       = module.database.version
 }
 
 output "adminuser" {
   description = "Database admin user name"
-  value       = module.etcd_db.adminuser
+  value       = module.database.adminuser
 }
 
 output "hostname" {
   description = "Database connection hostname"
-  value       = module.etcd_db.hostname
+  value       = module.database.hostname
 }
 
 output "port" {
   description = "Database connection port"
-  value       = module.etcd_db.port
+  value       = module.database.port
 }
 
 output "certificate_base64" {
   description = "Database connection certificate"
-  value       = module.etcd_db.certificate_base64
+  value       = module.database.certificate_base64
   sensitive   = true
 }

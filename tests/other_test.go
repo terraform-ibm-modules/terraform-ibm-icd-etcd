@@ -64,7 +64,7 @@ func TestRunRestoredDBExample(t *testing.T) {
 		ResourceGroup: resourceGroup,
 		Region:        fmt.Sprint(permanentResources["etcd_region"]),
 		TerraformVars: map[string]interface{}{
-			"etcd_db_crn": permanentResources["etcd_crn"],
+			"existing_database_crn": permanentResources["etcd_crn"],
 		},
 		CloudInfoService: sharedInfoSvc,
 	})
