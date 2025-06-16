@@ -33,7 +33,6 @@ This module implements an instance of the IBM Cloud Databases for etcd service.
 <!-- END OVERVIEW HOOK -->
 
 ## terraform-ibm-icd-etcd
-
 ### Usage
 
 IBM Cloud Databases supports:
@@ -62,8 +61,8 @@ module "ectd_db" {
 You need the following permissions to run this module.
 
 - Account Management
-  - **Databases for etcd** service
-    - `Editor` role access
+    - **Databases for etcd** service
+        - `Editor` role access
 
 <!-- END MODULE HOOK -->
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
